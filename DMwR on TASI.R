@@ -1,20 +1,5 @@
 library(quantmod)
 
-tasi <- read.table("TASINDX_AH_20151001.csv", header=T, sep=",")
-colnames(tasi) <- c("ticker", "date", "open", "high", "low", "close", "vol")
-close <- rev(tasi$close)
-ma50 <- runmean(close, 50, endrule="NA")
-ma200 <- runmean(close, 200, endrule="NA")
-tasi <- data.frame(close, ma50, ma200)
-rm(close, ma50, ma200)
-col <- c("black", "red", "green", "blue", "magenta", "cyan")
-plot(tasi$close, col=col[1], type="l")
-lines(tasi$ma50, col=col[2])
-lines(tasi$ma200, col=col[3])
-tasi$trend <- factor(ifelse(tasi$ma50 > tasi$ma200, "MA50>MA200", "MA50<MA200"))
-tasi$return <- c(NA, diff(log(tasi$close)))
-histogram(~return | trend, data=tasi)
-
 # Reading "zoo" series from text files (i.e. GulfBase.com price data) and converting
 # to "xts" series
 TASI <- as.xts(read.zoo("TASINDX_AH_20151001.csv", format="%Y%m%d", 
