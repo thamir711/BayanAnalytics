@@ -5,6 +5,7 @@ rm(list=ls())
 
 nameOfStrategy <- "TASI Moving Average Strategy"
 
+# Load the data
 TASI <- as.xts(read.zoo("TASINDX_AH_20151203.csv", format="%Y%m%d", header=T, sep=",",
                         colClasses=c("NULL", "character", "numeric", "numeric", "numeric", "numeric", "integer")))
 colnames(TASI) <- c("Open", "High", "Low", "Close", "Volume")
