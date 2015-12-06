@@ -155,6 +155,6 @@ pTab <- FindOptimumStrategy(trainingData)
 dev.new()
 # Manually specify the parameter that we want to trade here, just because a strategy is at the top of
 # pTab it might not be good (maybe due to overfit)
-outOfSampleReturns <- TradingStrategy(testData, mavga_period=30, mavgb_period=180)
+outOfSampleReturns <- TradingStrategy(testData, mavga_period=50, mavgb_period=200)
 finalReturns <- cbind(outOfSampleReturns, indexReturns)
 charts.PerformanceSummary(finalReturns, main=paste(nameOfStrategy, "- Out of Sample"), geometric=FALSE)

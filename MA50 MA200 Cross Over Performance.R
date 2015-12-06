@@ -36,3 +36,24 @@ colnames(pMetric) <- c("Profit", "SharpeRatio", "MaxDrawDown")
 pMetric
 
 charts.PerformanceSummary(tradingReturns, main=paste(nameOfStrategy, "- Training"), geometric=F)
+
+# TO DO: adjust the back-tested (observed) performance by the expected return of a rule
+# with no predictive power havign an equivalent position bias.
+# The benchmark for any rule can be defined as the expected return of a nonpredictive
+# rule with an equivalent position bias.
+
+# Calculating the Expected Return of a rule with no predictive power 
+# having an equivalent position bias as the MA50-MA200-Cross rule.
+# Using the formula: ER = [p(L) * ADC] - [p(S) * ADC]
+# ADC: Average Daily Change
+# p(L): proportion long of the rule; i.e. MA50-MA200-Cross
+# p(S): proportion short of the rule; i.e. MA50-MA200-Cross
+adc <- mean(returns)
+pS <- table(signal)[1]
+pL <- table(signal)[2]
+exp.return <- (pL * adc) - (pS * adc)
+
+# Adjusting the back-tested (observed) performance by the expected return of rule
+# with no predictive power having an equivalent position bias.
+pMetric[1] - exp.return
+
