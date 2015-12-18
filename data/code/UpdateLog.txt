@@ -1,0 +1,75 @@
+
+R version 3.2.2 (2015-08-14) -- "Fire Safety"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: i686-pc-linux-gnu (32-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ##########################################
+> ## Update data files 
+> ##########################################
+> library(quantmod)
+Loading required package: xts
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Loading required package: TTR
+Version 0.4-0 included new data defaults. See ?getSymbols.
+> 
+> thePath <- "~/R/BayanAnalytics/data/"
+> theFiles <- list.files(path=thePath, pattern=".csv")
+> 
+> for (ii in theFiles) {
++   data <- read.csv(paste(thePath, ii, sep=""))
++   data <- xts(data[, c("Open","High","Low","Close","Volume")], order.by=as.Date(data[, "Index"], format="%Y-%m-%d"))
++   lastHistoricalDate = index(data[nrow(data), ])
++   
++   src.data <- read.csv(paste(thePath, "gulfbase/", ii, sep=""))
++   colnames(src.data) <- c("Symbol", "Index", "Open", "High", "Low", "Close", "Volume")
++   recent <- xts(src.data[, c("Open", "High", "Low", "Close", "Volume")], 
++               order.by=as.Date(strptime(src.data[, "Index"], format="%Y%m%d")))
++   
++   pos <- match(as.Date(lastHistoricalDate, format="%Y-%m-%d"), index(recent))
++   
++   if (!is.na(pos)) { 
++     if (pos == nrow(recent))
++       print("File already up-to-date")
++     
++     if (pos < nrow(recent)) {
++       dt <- NULL
++       dt <- rbind(data, recent[(pos + 1):nrow(recent), ])
++       
++       write.zoo(dt, paste(thePath, ii, sep=""), sep=",", row.names=FALSE) 
++     }
++   }
++   
++   if (is.na(pos))
++     print("Error: dates do not match")
++ }
+[1] "File already up-to-date"
+[1] "File already up-to-date"
+[1] "File already up-to-date"
+[1] "File already up-to-date"
+[1] "File already up-to-date"
+[1] "File already up-to-date"
+> 
+> proc.time()
+   user  system elapsed 
+  1.600   0.056   1.709 

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+R CMD BATCH ~/R/BayanAnalytics/data/code/UpdateData.R ~/R/BayanAnalytics/data/code/UpdateLog.txt
+
