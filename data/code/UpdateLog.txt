@@ -17,8 +17,15 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > ##########################################
-> ## Update data files 
+> ## Update data files
+> ## Before running this script make sure you do the following:
+> ## 1. Download the one-year price data containing all stocks/indices from GulfBase
+> ## 2. Place the price data file (only one file) in /gulfbase
+> ## 3. Rename the price data file to "PriceData.csv"
+> ## 4. Now you can run this script
 > ##########################################
 > library(quantmod)
 Loading required package: xts
@@ -35,16 +42,19 @@ Version 0.4-0 included new data defaults. See ?getSymbols.
 > 
 > thePath <- "~/R/BayanAnalytics/data/"
 > theFiles <- list.files(path=thePath, pattern=".csv")
+> src.data <- read.csv(paste(thePath, "gulfbase/PriceData.csv", sep=""))
+> colnames(src.data) <- c("Symbol", "Index", "Open", "High", "Low", "Close", "Volume")
 > 
 > for (ii in theFiles) {
 +   data <- read.csv(paste(thePath, ii, sep=""))
 +   data <- xts(data[, c("Open","High","Low","Close","Volume")], order.by=as.Date(data[, "Index"], format="%Y-%m-%d"))
 +   lastHistoricalDate = index(data[nrow(data), ])
 +   
-+   src.data <- read.csv(paste(thePath, "gulfbase/", ii, sep=""))
-+   colnames(src.data) <- c("Symbol", "Index", "Open", "High", "Low", "Close", "Volume")
-+   recent <- xts(src.data[, c("Open", "High", "Low", "Close", "Volume")], 
-+               order.by=as.Date(strptime(src.data[, "Index"], format="%Y%m%d")))
++   symbol <- substr(ii, 1, nchar(ii) - 4)
++   symbol.data <- src.data[src.data[, "Symbol"] == symbol, ]
++   
++   recent <- xts(symbol.data[, c("Open", "High", "Low", "Close", "Volume")], 
++               order.by=as.Date(strptime(symbol.data[, "Index"], format="%Y%m%d")))
 +   
 +   pos <- match(as.Date(lastHistoricalDate, format="%Y-%m-%d"), index(recent))
 +   
@@ -63,13 +73,7 @@ Version 0.4-0 included new data defaults. See ?getSymbols.
 +   if (is.na(pos))
 +     print("Error: dates do not match")
 + }
-[1] "File already up-to-date"
-[1] "File already up-to-date"
-[1] "File already up-to-date"
-[1] "File already up-to-date"
-[1] "File already up-to-date"
-[1] "File already up-to-date"
 > 
 > proc.time()
    user  system elapsed 
-  1.600   0.056   1.709 
+  2.596   0.044   2.663 

@@ -1,5 +1,10 @@
 ##########################################
 ## Daily prices from GulfBase
+## WARNING: To download symbols for the first time (i.e. not existing in /gulfbase),
+##          make sure that you include ONLY the new symbols in ListOfInstruments.R file.
+##          Otherwise, you'll overwrite the up-to-date symbol files in /data.
+##          After downloading the new symbols, update the ListOfInstruments.R file 
+##          to include all the symbols you want to update using UpdateData.R file.
 ##########################################
 library(quantmod)
 
