@@ -1,5 +1,5 @@
 library(quantmod)
-library(ellipse)
+library(moments)
 
 dataPath <- "~/R/BayanAnalytics/data/"
 startDate <- as.Date("2007-01-06")
