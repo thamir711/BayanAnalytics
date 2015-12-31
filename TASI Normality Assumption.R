@@ -2,7 +2,7 @@ library(quantmod)
 library(moments)
 
 dataPath <- "~/R/BayanAnalytics/data/"
-startDate <- as.Date("2007-01-06")
+startDate <- "2007-01-06"
 
 symbols <- c("TASI",
              "TASI.BFS",
@@ -21,18 +21,20 @@ symbols <- c("TASI",
              "TASI.MAP",
              "TASI.HTT")
 
-returns <- data.frame()
-
+firsttime <- TRUE
 for (symbol in symbols) {
   data <- read.csv(paste(dataPath, symbol, ".csv", sep=""))
-  data <- xts(data[, c("Open","High","Low","Close","Volume")], order.by=as.Date(data[, "Index"], format="%Y-%m-%d"))
-  data <- window(data, start=startDate)
+  obs.rows <- seq(which(data[, "Index"] == startDate), nrow(data))
   
-  print(paste(symbol, ": ", length(data), " rows", sep=""))
-  returns <- cbind(returns, Delt(Cl(data), type="log"))
+  if (firsttime) {
+    returns <- data.frame(Index=factor(data[obs.rows, "Index"]))
+    firsttime <- FALSE
+  }
+  
+  print(paste(symbol, ": ", length(obs.rows), " rows", sep=""))
+  returns[, symbol] <- as.numeric(Delt(Cl(data[obs.rows, ]), type="log"))
 }
-
-colnames(returns) <- symbols
+returns <- xts(returns[, -1], order.by=as.Date(returns[, "Index"], format="%Y-%m-%d"))
 returns <- returns[-1, ]
 
 plot(returns[, "TASI"], auto.grid=FALSE, minor.ticks=FALSE, main="TASI Daily Returns", ylab="log return")
@@ -47,4 +49,5 @@ kurtosis(returns[, "TASI"]) - 3    # Excess kurtosis
 0.01 * length(returns[, "TASI"])  # Number of observations below the lower bound of 99% under the assumption of normaility.
 lower.bound <- - 2.33 * sd(returns[, "TASI"])
 sum(returns[, "TASI"] < lower.bound) # Number of "actual" observations below the lower bound of 99%. Clearly TASI violate the assumpton of normality.
-
+# Notice the dates in which observations are below the lower bound of 99%
+returns[which(returns[, "TASI"] < lower.bound), "TASI"]
