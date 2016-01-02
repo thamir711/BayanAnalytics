@@ -1,0 +1,47 @@
+---
+title: "Testing TASI Index Normality Assumption"
+author: "Thamir K. AlHashemi"
+date: "January 1, 2016"
+output: html_document
+---
+
+In this post, I explore the **normality assumption** of the Saudi stock market; i.e. Tadawul. Mainly, I attempt to answer the question, “Is it valid to assume that Tadawul shows characteristics of normality in its returns?” The short answer is a resounding NO. Why? Continue reading.
+
+Normality assumption is a choice made by financial analysts and risk managers to simplify their understanding of the financial markets.
+
+Normality assumption implies that each stock/portfolio return is an independent realization from the same normal distribution; i.e. returns are i.i.d normal. It also implies that the returns distribution can be completely characterized by only two parameters: the mean and the variance. The skewness and (excess) kurtosis should be zero. However, this is rarely the case in financial markets.
+
+```{r preparation, echo=FALSE, message=FALSE, results="hide"}
+source("Testing_TASI_Index_Normality_Assumption.R")
+```
+
+Now let us consider the daily returns of TASI index for the period from 7-Jan-2007 to 27-Dec-2015 (illustrated and described below). Notice the extreme volatility in 2008.
+
+```{r plot_one, echo=FALSE}
+plot(returns[, "TASI"], auto.grid=FALSE, minor.ticks=FALSE, main="TASI Daily Returns", ylab="log return")
+```
+
+**Statistical analysis of TASI index returns, 7-Jan-2007 to 27-Dec-2015**
+
+```{r observation, echo=FALSE, results='hide'}
+lower.bound <- - 2.33 * sd(returns[, "TASI"])
+```
+
+- Observations: `r length(returns[, "TASI"])`
+- Mean return: `r mean(returns[, "TASI"])`
+- Standard deviation per day: `r sd(returns[, "TASI"])`
+- Volatility: `r sd(returns[, "TASI"]) * sqrt(250)`
+- Skewness: `r skewness(returns[, "TASI"])`
+- Excess kurtosis: `r kurtosis(returns[, "TASI"]) - 3`
+- Observations below the lower bound of 99% CI: `r sum(returns[, "TASI"] < lower.bound)` vs `r 0.01 * length(returns[, "TASI"])` expected
+
+As shown in the last line in the above table, the number of observations below the lower bound of 99% confidence interval (marked red in the plot below) is more than expected due mainly to the negative skewness and positive excess kurtosis. Notice the clustering and calendar dates of these observations.
+
+```{r plot_two, echo=FALSE}
+plot(returns[, "TASI"], auto.grid=FALSE, minor.ticks=FALSE, main="TASI Daily Returns", ylab="log return")
+points(returns[which(returns[, "TASI"] < lower.bound), "TASI"], col="red", pch=20)
+```
+
+Conclusion: this analysis demonstrated that *TASI violates the assumption of normality.*
+
+Thank you.
