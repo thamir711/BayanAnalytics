@@ -39,3 +39,8 @@ plot(density(rnorm(2245, mean=mean(returns$TASI), sd=sd(returns$TASI))))
 ## Using ggplot2
 qplot(returns$TASI)
 ggplot(returns, aes(x=TASI)) + geom_histogram(binwidth=diff(range(returns$TASI))/30)
+
+## Normal Q-Q Plot
+qqnorm(returns$TASI, datax=TRUE)
+qqline(returns$TASI, datax=TRUE)
+
