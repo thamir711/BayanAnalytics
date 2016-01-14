@@ -27,6 +27,26 @@ yfit <- yfit * diff(h$mids[1:2]) * length(x)
 lines(xfit, yfit, col="red", lwd=2)
 legend(x="topright", c("kernel density estimaiton", "normal curve"), lty=c(1, 1), col=c("blue", "red"), cex=0.8, bty="n")
 
+## TASI sectors returns histogram with normal curve
+for (symbol in symbols) {
+  x <- returns[, symbol]
+  h <- hist(x, breaks=30, xlab="return", main=paste(symbol, " log returns", sep=""), ylim=c(0, 750))
+  rug(jitter(x))
+  ## Overlaying the kernel density estimation
+  d <- density(x, adjust=1.5)
+  xfit <- d$x
+  yfit <- d$y * diff(h$mids[1:2]) * length(x)
+  lines(xfit, yfit, col="blue", lwd=2)
+  legend(x="topright", c("kernel density estimaiton"), lty=1, col="blue", cex=0.8, bty="n")
+  ## Overlaying the normal density curve
+  xfit <- seq(min(x), max(x), length=length(x))
+  yfit <- dnorm(xfit, mean=mean(x), sd=sd(x))
+  ## yfit <- dnorm(xfit, mean=median(x), sd=mad(x))
+  yfit <- yfit * diff(h$mids[1:2]) * length(x)
+  lines(xfit, yfit, col="red", lwd=2)
+  legend(x="topright", c("kernel density estimaiton", "normal curve"), lty=c(1, 1), col=c("blue", "red"), cex=0.8, bty="n")
+}
+
 ## Using Kernel Density Estimation (KDE)
 density(returns$TASI)
 plot(density(returns$TASI))
@@ -43,4 +63,9 @@ ggplot(returns, aes(x=TASI)) + geom_histogram(binwidth=diff(range(returns$TASI))
 ## Normal Q-Q Plot
 qqnorm(returns$TASI, datax=TRUE)
 qqline(returns$TASI, datax=TRUE)
+
+## Plotting Fig. 4.11
+plot(density(rlnorm(150, 0, 1)))
+qqnorm(rlnorm(150, 0, 1), datax=TRUE)
+qqline(rlnorm(150, 0, 1), datax=TRUE)
 
