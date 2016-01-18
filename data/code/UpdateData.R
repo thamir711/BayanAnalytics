@@ -4,7 +4,7 @@
 ## 1. Download the one-year price data containing all stocks/indices from GulfBase
 ## 2. Place the price data file (only one file) in /gulfbase
 ## 3. Rename the price data file to "PriceData.csv"
-## 4. Now you can run this script
+## 4. Now you can run the bash script UpdateDailyPrices
 ##########################################
 library(quantmod)
 

@@ -69,3 +69,29 @@ plot(density(rlnorm(150, 0, 1)))
 qqnorm(rlnorm(150, 0, 1), datax=TRUE)
 qqline(rlnorm(150, 0, 1), datax=TRUE)
 
+## Plot KDE using all the kernels
+kernels <- eval(formals(density.default)$kernel)
+plot(density(returns$TASI))
+for (i in 2:length(kernels)) lines(density(returns$TASI, kernel=kernels[i]), col=i)
+legend(x="topright", legend = kernels, col = seq(kernels), lty = 1, cex = .8, y.intersp = 1)
+
+## Plotting TASI Density Function and Normal Q-Q Plot
+par(mfrow=c(1,2))
+plot(density(returns$TASI, kernel="rectangular", adjust=3/4, from=-0.045, to=0.045), main="TASI log returns", xlab="log returns")
+qqnorm(returns$TASI, datax=TRUE)
+qqline(returns$TASI, datax=TRUE)
+par(mfrow=c(1,1))
+
+## QQ plot between TASI log returns and t-student distribution
+df <- 2
+qqplot(returns$TASI, rt(length(returns$TASI), df))  ## The two samples have the same size, then need only plot their order statistics against each other.
+lmfit <- lm(qt(c(.25, .75), df=df) ~ quantile(sort(returns$TASI), c(.25, .75)))
+abline(lmfit)
+
+## The two samples do not have the same size, then one computes the same sets of sample quantiles for each and plots them.
+n <- length(returns$TASI); grid <- (1:n)/(n+1)
+qqplot(sort(returns$TASI), qt(grid, df=df))
+lmfit <- lm(qt(c(.25, .75), df=df) ~ quantile(sort(returns$TASI), c(.25, .75)))
+abline(lmfit)
+
+## QQ plot of TASI index vs 
