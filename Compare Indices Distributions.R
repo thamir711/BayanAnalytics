@@ -1,4 +1,5 @@
-dataPath <- "~/R/BayanAnalytics/data/"
+library(quantmod)
+dataPath <- "~/R/BayanAnalytics/data/etc/"
 
 symbols <- c("TASI",
              "DFM",
