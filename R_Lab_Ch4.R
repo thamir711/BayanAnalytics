@@ -76,11 +76,11 @@ for (i in 2:length(kernels)) lines(density(returns$TASI, kernel=kernels[i]), col
 legend(x="topright", legend = kernels, col = seq(kernels), lty = 1, cex = .8, y.intersp = 1)
 
 ## Plotting TASI Density Function and Normal Q-Q Plot
-par(mfrow=c(1,2))
+par(mfrow=c(1, 2))
 plot(density(returns$TASI, kernel="rectangular", adjust=3/4, from=-0.045, to=0.045), main="TASI log returns", xlab="log returns")
 qqnorm(returns$TASI, datax=TRUE)
 qqline(returns$TASI, datax=TRUE)
-par(mfrow=c(1,1))
+par(mfrow=c(1, 1))
 
 ## QQ plot between TASI log returns and t-student distribution
 df <- 2
@@ -94,4 +94,34 @@ qqplot(sort(returns$TASI), qt(grid, df=df))
 lmfit <- lm(qt(c(.25, .75), df=df) ~ quantile(sort(returns$TASI), c(.25, .75)))
 abline(lmfit)
 
-## QQ plot of TASI index vs 
+## Figure 4.15: Normal and t probability plots
+par(mfrow=c(3, 2))
+qqplot(returns$TASI, rnorm(length(returns$TASI)), main="Normal probability plot", xlab="log return", ylab="normal quantiles")
+lmfit <- lm(qnorm(c(.25, .75)) ~ quantile(sort(returns$TASI), c(.25, .75)))
+abline(lmfit)
+# t-distribution with 1 degrees of freedom
+df <- 1
+qqplot(returns$TASI, rt(length(returns$TASI), df), main="t-probability, df = 1", xlab="log return", ylab="t-quantiles")
+lmfit <- lm(qt(c(.25, .75), df=df) ~ quantile(sort(returns$TASI), c(.25, .75)))
+abline(lmfit)
+# t-distribution with 2 degrees of freedom
+df <- 2
+qqplot(returns$TASI, rt(length(returns$TASI), df), main="t-probability, df = 2", xlab="log return", ylab="t-quantiles")
+lmfit <- lm(qt(c(.25, .75), df=df) ~ quantile(sort(returns$TASI), c(.25, .75)))
+abline(lmfit)
+# t-distribution with 4 degrees of freedom
+df <- 4
+qqplot(returns$TASI, rt(length(returns$TASI), df), main="t-probability, df = 4", xlab="log return", ylab="t-quantiles")
+lmfit <- lm(qt(c(.25, .75), df=df) ~ quantile(sort(returns$TASI), c(.25, .75)))
+abline(lmfit)
+# t-distribution with 8 degrees of freedom
+df <- 8
+qqplot(returns$TASI, rt(length(returns$TASI), df), main="t-probability, df = 8", xlab="log return", ylab="t-quantiles")
+lmfit <- lm(qt(c(.25, .75), df=df) ~ quantile(sort(returns$TASI), c(.25, .75)))
+abline(lmfit)
+# t-distribution with 15 degrees of freedom
+df <- 15
+qqplot(returns$TASI, rt(length(returns$TASI), df), main="t-probability, df = 15", xlab="log return", ylab="t-quantiles")
+lmfit <- lm(qt(c(.25, .75), df=df) ~ quantile(sort(returns$TASI), c(.25, .75)))
+abline(lmfit)
+par(mfrow=c(1, 1))
