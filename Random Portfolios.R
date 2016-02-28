@@ -1,7 +1,7 @@
 library(quantmod)
 library(reshape2)
 
-weekly.files <- c("WTD20160211.csv", "WTD20160218.csv")
+weekly.files <- c("WTD20160211.csv", "WTD20160218.csv", "WTD20160225.csv")
 portfolio.value <- 1000000
 max.stocks <- 20     ## maximum number of stocks in a portfolio
 no.portfolios <- 100000  ## number of random portfolios
